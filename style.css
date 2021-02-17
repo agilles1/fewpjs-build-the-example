@@ -65,6 +65,6 @@ article.media-post > footer ul {
   visibility: hidden;
 }
 
-.hidden {
-  visibility: show;
+.show {
+  visibility: visible;
 }

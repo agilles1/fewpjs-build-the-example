@@ -1,18 +1,50 @@
 const EMPTY_HEART = '♡'
 const FULL_HEART = '♥'
-const likeButtons = document.querySelectorAll(".like")
+
 const error = document.getElementById("modal")
 error.setAttribute("class", "hidden")
 
-let glyphStates = {
-  "♡": "♥",
-  "♥": "♡"
-};
+document.addEventListener("DOMContentLoaded", () =>{
+  const error = document.getElementById("modal")
+  error.setAttribute("class", "hidden")
 
-let colorStates = {
-  "activated-heart" : "like-glyph",
-  "like-glyph": "activated-heart"
-};
+  const likeButtons = document.getElementsByClassName("like-glyph")
+
+  likePost(likeButtons)
+  
+})
+
+const likePost = (likeButtons) => {
+  for (const heart of likeButtons){
+    heart.addEventListener("click", (e)=> {
+      mimicServerCall()
+      .then(()=> {
+        if (heart.innerHTML == EMPTY_HEART){
+          heart.innerHTML = FULL_HEART
+          heart.className = "activated-heart"
+        } else {
+          heart.innerHTML = EMPTY_HEART
+          heart.className = "like-glyph"
+        }
+      })
+      .catch(e =>{
+                error.setAttribute("class", "show")
+                const errorMessage = document.querySelector("#modal-message")
+                errorMessage.innerText = e 
+                setTimeout(() => {error.setAttribute("class", "hidden")}, 5000)
+              })
+    })
+  }
+}
+// let glyphStates = {
+//   "♡": "♥",
+//   "♥": "♡"
+// };
+
+// let colorStates = {
+//   "activated-heart" : "like-glyph",
+//   "like-glyph": "activated-heart"
+// };
 
 
 
@@ -29,19 +61,19 @@ let colorStates = {
  
 //   })}
 
-  function likePost(e){
-    let heart = e.target;
-    mimicServerCall()
-    .then(function(){
-       heart.innerText = glyphStates[heart.innerText];
-       heart.setAttribute("class", colorStates[heart.classList.value])
-       debugger
-    })
-    .catch(function() {
-      error.setAttribute("class", "show")
-      setTimeout(() => {error.setAttribute("class", "hidden")}, 5000)
-      })
-  }
+  // function likePost(e){
+  //   let heart = e.target;
+  //   mimicServerCall()
+  //   .then(function(){
+  //      heart.innerText = glyphStates[heart.innerText];
+  //      heart.setAttribute("class", colorStates[heart.classList.value])
+  //      debugger
+  //   })
+  //   .catch(function() {
+  //     error.setAttribute("class", "show")
+  //     setTimeout(() => {error.setAttribute("class", "hidden")}, 5000)
+  //     })
+  // }
 
   // function unlikePost(e){
   //   let heart = e.target
@@ -62,9 +94,9 @@ let colorStates = {
   //   glyph.addEventListener("click", likePost)
   // })
 
-  for (let glyph of likeButtons) {
-    glyph.addEventListener("click", likePost);
-  }
+  // for (let glyph of likeButtons) {
+  //   glyph.addEventListener("click", likePost);
+  // }
 
 
 function mimicServerCall(url="http://mimicServer.example.com", config={}) {
